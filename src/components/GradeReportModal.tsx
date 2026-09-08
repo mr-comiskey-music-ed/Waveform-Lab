@@ -206,15 +206,12 @@ export const GradeReportModal: React.FC<GradeReportModalProps> = ({
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-[#00ff9d]" />
                 <span className="text-xs font-mono text-gray-400 uppercase tracking-wider font-bold">
-                  TAMPER-EVIDENT VERIFICATION GRADE CODE:
+                  VERIFICATION GRADE CODE:
                 </span>
               </div>
               <div className="text-xl font-mono font-black tracking-widest text-[#00ff9d]">
                 {scoreData.verificationCode}
               </div>
-              <p className="text-[11px] text-gray-500 font-mono">
-                Encodes student identity, scores, timestamp, and algorithmic checksum.
-              </p>
             </div>
 
             <button

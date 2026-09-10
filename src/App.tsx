@@ -6,6 +6,7 @@ import { WalkthroughMode } from './components/WalkthroughMode';
 import { FourierLab } from './components/FourierLab';
 import { QuestsMode } from './components/QuestsMode';
 import { GradeReportModal } from './components/GradeReportModal';
+import { WaveformLogo } from './components/WaveformLogo';
 import { buildVerificationCode } from './utils/gradeSecurity';
 import {
   Volume2,
@@ -155,12 +156,10 @@ export default function App() {
       <header className="flex flex-wrap items-center justify-between bg-[#1a1d26] p-4 rounded-xl border border-white/5 gap-4">
         {/* Brand & Version Badge */}
         <div className="flex items-center space-x-3 sm:space-x-4">
-          <div className="w-10 h-10 bg-[#00ff9d] rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(0,255,157,0.3)] shrink-0">
-            <Sparkles className="w-5 h-5 text-black stroke-[2.5]" />
-          </div>
+          <WaveformLogo className="w-10 h-10 shrink-0" />
           <div>
             <h1 className="text-base sm:text-lg font-bold text-white tracking-tight uppercase">
-              Waveform Lab <span className="text-[#00ff9d] font-mono ml-2 opacity-50 text-xs sm:text-sm">v2.4</span>
+              Waveform Lab
             </h1>
             <p className="text-xs text-gray-500 uppercase tracking-widest">
               Additive Synthesis & Harmonic Theory

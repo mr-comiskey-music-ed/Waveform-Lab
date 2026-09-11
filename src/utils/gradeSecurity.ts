@@ -79,9 +79,9 @@ Student ID:       ${score.studentId || 'N/A'}
 Date & Time:      ${score.timestamp}
 
 MISSION SCORES:
-- Quest A (Fourier Architect):    ${score.questAScore}% / 100%
-- Quest B (Spectrum Detective):   ${score.questBScore}% / 100%
-- Quest C (Harmonic Math):        ${score.questCScore}% / 100%
+- Challenge A (Fourier Architect):    ${score.questAScore}% / 100%
+- Challenge B (Spectrum Detective):   ${score.questBScore}% / 100%
+- Challenge C (Harmonic Math):        ${score.questCScore}% / 100%
 
 ------------------------------------------------
 FINAL COMPOSITE SCORE:            ${Math.round(score.totalScore)}% / 100%

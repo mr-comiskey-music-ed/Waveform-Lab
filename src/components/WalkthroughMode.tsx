@@ -122,7 +122,7 @@ export const WalkthroughMode: React.FC<WalkthroughModeProps> = ({
       <div className="flex flex-wrap items-center justify-between bg-[#1a1d26] border border-white/5 rounded-xl p-3.5 shadow-xl gap-3">
         <div className="flex items-center gap-2">
           <span className="text-xs uppercase tracking-[0.2em] text-gray-500 font-bold">
-            DISCOVERY CHAPTER:
+            LEARN CHAPTER:
           </span>
           <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#00ff9d]/10 text-[#00ff9d] font-mono font-bold border border-[#00ff9d]/30">
             0{currentStep} / 05

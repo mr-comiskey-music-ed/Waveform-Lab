@@ -179,7 +179,7 @@ export default function App() {
             }`}
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>Discovery</span>
+            <span>Learn</span>
           </button>
           <button
             id="tab-mode-fourier"
@@ -191,7 +191,7 @@ export default function App() {
             }`}
           >
             <Sliders className="w-3.5 h-3.5" />
-            <span>Fourier Lab</span>
+            <span>Playground</span>
           </button>
           <button
             id="tab-mode-quests"
@@ -203,7 +203,7 @@ export default function App() {
             }`}
           >
             <Trophy className="w-3.5 h-3.5" />
-            <span>Quests</span>
+            <span>Challenges</span>
           </button>
           <button
             id="tab-mode-teacher"

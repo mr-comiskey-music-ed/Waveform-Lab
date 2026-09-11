@@ -248,12 +248,12 @@ export const QuestsMode: React.FC<QuestsModeProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Quest Selector Bar */}
+      {/* Challenge Selector Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3 bg-[#1a1d26] border border-white/5 rounded-xl p-3.5 shadow-xl">
         <div className="flex items-center gap-2">
           <Trophy className="w-4 h-4 text-[#00ff9d]" />
           <span className="text-xs uppercase tracking-[0.2em] text-white font-bold">
-            ASSESSMENT QUEST MISSIONS
+            ASSESSMENT CHALLENGE MISSIONS
           </span>
         </div>
 
@@ -267,7 +267,7 @@ export const QuestsMode: React.FC<QuestsModeProps> = ({
                 : 'bg-black/40 text-gray-500 hover:text-white border border-white/10'
             }`}
           >
-            Quest A: Fourier Architect
+            Challenge A: Fourier Architect
           </button>
           <button
             id="tab-quest-b"
@@ -278,7 +278,7 @@ export const QuestsMode: React.FC<QuestsModeProps> = ({
                 : 'bg-black/40 text-gray-500 hover:text-white border border-white/10'
             }`}
           >
-            Quest B: Blind Detective
+            Challenge B: Blind Detective
           </button>
           <button
             id="tab-quest-c"
@@ -289,7 +289,7 @@ export const QuestsMode: React.FC<QuestsModeProps> = ({
                 : 'bg-black/40 text-gray-500 hover:text-white border border-white/10'
             }`}
           >
-            Quest C: Harmonic Math
+            Challenge C: Harmonic Math
           </button>
         </div>
       </div>

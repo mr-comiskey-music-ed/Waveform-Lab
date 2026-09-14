@@ -227,6 +227,52 @@ class AudioEngine {
     this.masterGain.gain.setValueAtTime(this.isDroneActive ? this.currentVolume : 0, now + durationSec + 0.01);
   }
 
+  public playPureWave(type: WaveformType, freqHz: number, durationSec: number = 1.2) {
+    this.resume();
+    if (!this.ctx || !this.masterGain) return;
+
+    const now = this.ctx.currentTime;
+    // Mute additive oscillators & noise
+    this.oscillators.forEach(item => {
+      item.gain.gain.setValueAtTime(0, now);
+    });
+    if (this.noiseGain) {
+      this.noiseGain.gain.setValueAtTime(0, now);
+    }
+
+    if (type === 'noise') {
+      this.playNoise();
+      return;
+    }
+
+    // Create a temporary native oscillator for pure unfiltered square/saw/triangle/sine waveform
+    const tempOsc = this.ctx.createOscillator();
+    tempOsc.type = type === 'sine' ? 'sine' : type === 'triangle' ? 'triangle' : type === 'square' ? 'square' : 'sawtooth';
+    tempOsc.frequency.setValueAtTime(freqHz, now);
+
+    const tempGain = this.ctx.createGain();
+    tempGain.gain.setValueAtTime(0, now);
+    tempGain.gain.linearRampToValueAtTime(this.currentVolume * 0.6, now + 0.05);
+
+    const holdTime = Math.max(0.1, durationSec - 0.3);
+    tempGain.gain.setValueAtTime(this.currentVolume * 0.6, now + holdTime);
+    tempGain.gain.linearRampToValueAtTime(0.0001, now + durationSec);
+
+    tempOsc.connect(tempGain);
+    tempGain.connect(this.masterGain);
+
+    tempOsc.start(now);
+    tempOsc.stop(now + durationSec + 0.05);
+
+    // Master gain envelope for note trigger
+    this.masterGain.gain.cancelScheduledValues(now);
+    this.masterGain.gain.setValueAtTime(0, now);
+    this.masterGain.gain.linearRampToValueAtTime(this.currentVolume, now + 0.05);
+    this.masterGain.gain.setValueAtTime(this.currentVolume, now + holdTime);
+    this.masterGain.gain.linearRampToValueAtTime(0.0001, now + durationSec);
+    this.masterGain.gain.setValueAtTime(this.isDroneActive ? this.currentVolume : 0, now + durationSec + 0.01);
+  }
+
   public playPresetFormula(type: WaveformType) {
     this.resume();
     if (type === 'noise') {

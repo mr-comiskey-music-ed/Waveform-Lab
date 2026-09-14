@@ -95,9 +95,11 @@ export const QuestsMode: React.FC<QuestsModeProps> = ({
       setPassedMissions((prev) => {
         const next = [...prev];
         next[questATargetIndex] = true;
+        const passedCount = next.filter(Boolean).length;
+        const scoreA = Math.round((passedCount / questATargets.length) * 100);
+        onUpdateScore('a', scoreA);
         return next;
       });
-      onUpdateScore('a', 100);
     }
   }, [targetCheck.passed, questATargetIndex]);
 
@@ -161,9 +163,9 @@ export const QuestsMode: React.FC<QuestsModeProps> = ({
   const playMystery = (waveType: WaveformType, freq: number) => {
     audioEngine.resume();
     audioEngine.setFundamental(freq);
+    audioEngine.playPureWave(waveType, freq, 1.2);
     const h = audioEngine.playPresetFormula(waveType);
     if (h) onUpdateHarmonics(h);
-    audioEngine.triggerNote(freq, 1.2);
   };
 
   // Switch to Quest B: activate Oscilloscope scramble
@@ -203,7 +205,7 @@ export const QuestsMode: React.FC<QuestsModeProps> = ({
   const [cQuestions] = useState([
     {
       id: 1,
-      q: 'If a basic musical note (fundamental 1f) vibrates at 100 Hz, what is the frequency of its 2nd harmonic (2f)? (Hint: multiply 100 by 2)',
+      q: 'If a basic musical note (fundamental 1f) vibrates at 100 Hz, what is the frequency of its 2nd harmonic (2f)?',
       options: ['100 Hz', '200 Hz', '300 Hz', '400 Hz'],
       correct: 1, // 200 Hz (100 * 2)
       explanation: 'Easy math: 2f = 2 × 100 Hz = 200 Hz (exactly one octave higher).',

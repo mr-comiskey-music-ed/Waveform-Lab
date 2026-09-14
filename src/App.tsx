@@ -7,7 +7,7 @@ import { FourierLab } from './components/FourierLab';
 import { QuestsMode } from './components/QuestsMode';
 import { GradeReportModal } from './components/GradeReportModal';
 import { WaveformLogo } from './components/WaveformLogo';
-import { buildVerificationCode } from './utils/gradeSecurity';
+import { buildVerificationCode, decodeReportFromLink } from './utils/gradeSecurity';
 import {
   Volume2,
   VolumeX,
@@ -23,6 +23,10 @@ export default function App() {
   const [activeMode, setActiveMode] = useState<AppMode>('walkthrough');
   const [fundamentalHz, setFundamentalHz] = useState<number>(130.81); // C3
   const [isScrambled, setIsScrambled] = useState<boolean>(false);
+
+  // Grade modal state
+  const [showGradeModal, setShowGradeModal] = useState<boolean>(false);
+  const [sharedReportData, setSharedReportData] = useState<StudentScore | null>(null);
 
   // Auto-resume audio engine on mount and first user interaction
   useEffect(() => {
@@ -79,18 +83,20 @@ export default function App() {
     };
   });
 
-  // Parse URL parameters for teacher assignment on load
-  const [assignmentId, setAssignmentId] = useState<string>('');
   const [walkthroughStep, setWalkthroughStep] = useState<number>(1);
   const [walkthroughPhaseDeg, setWalkthroughPhaseDeg] = useState<number>(0);
+
+  // Parse URL parameters for shared report on load
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
-      const assign = params.get('assignment');
-      const studentParam = params.get('student');
-      if (assign) setAssignmentId(assign);
-      if (studentParam) {
-        handleUpdateStudentInfo(studentParam, '');
+      const reportParam = params.get('report');
+      if (reportParam) {
+        const decoded = decodeReportFromLink(reportParam);
+        if (decoded) {
+          setSharedReportData(decoded);
+          setShowGradeModal(true);
+        }
       }
     } catch (e) {
       // ignore
@@ -150,8 +156,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full bg-[#0f1117] text-gray-300 font-sans p-3 sm:p-4 space-y-4 flex flex-col selection:bg-[#00ff9d] selection:text-black">
-
-
       {/* Sleek Interface Header */}
       <header className="flex flex-wrap items-center justify-between bg-[#1a1d26] p-4 rounded-xl border border-white/5 gap-4">
         {/* Brand & Version Badge */}
@@ -205,28 +209,26 @@ export default function App() {
             <Trophy className="w-3.5 h-3.5" />
             <span>Challenges</span>
           </button>
-          <button
-            id="tab-mode-teacher"
-            onClick={() => setActiveMode('teacher')}
-            className={`px-3 sm:px-4 py-2 rounded text-xs font-bold uppercase transition-all flex items-center gap-1.5 shrink-0 ${
-              activeMode === 'teacher'
-                ? 'bg-[#2a2e3a] text-[#00ff9d] border border-white/10 shadow-sm'
-                : 'text-gray-500 hover:text-white'
-            }`}
-          >
-            <GraduationCap className="w-3.5 h-3.5" />
-            <span>Grade Report</span>
-          </button>
         </nav>
 
-        {/* Current Grade Readout */}
-        <div className="flex items-center space-x-4">
+        {/* Current Grade & Report Button */}
+        <div className="flex items-center space-x-3">
           <div className="text-right">
             <div className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">Current Grade</div>
             <div className="text-sm font-mono text-[#00e5ff] font-bold">
               {Math.round(scoreData.totalScore)} / 100
             </div>
           </div>
+          <button
+            onClick={() => {
+              setSharedReportData(null);
+              setShowGradeModal(true);
+            }}
+            className="flex items-center gap-1.5 bg-[#00ff9d]/10 hover:bg-[#00ff9d]/20 text-[#00ff9d] px-3 py-2 rounded-lg border border-[#00ff9d]/30 text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_10px_rgba(0,255,157,0.15)]"
+          >
+            <GraduationCap className="w-4 h-4" />
+            <span>Report</span>
+          </button>
         </div>
       </header>
 
@@ -270,15 +272,17 @@ export default function App() {
             onUpdateScore={handleUpdateQuestScore}
           />
         )}
-
-        {activeMode === 'teacher' && (
-          <GradeReportModal
-            scoreData={scoreData}
-            onUpdateStudentInfo={handleUpdateStudentInfo}
-            assignmentId={assignmentId}
-          />
-        )}
       </main>
+
+      {/* Grade Report Modal Pop-up */}
+      {showGradeModal && (
+        <GradeReportModal
+          scoreData={sharedReportData || scoreData}
+          onUpdateStudentInfo={handleUpdateStudentInfo}
+          onClose={() => setShowGradeModal(false)}
+          isReadOnly={!!sharedReportData}
+        />
+      )}
 
       {/* Sleek Interface Footer */}
       <footer className="flex flex-wrap items-center justify-between bg-[#1a1d26] p-4 rounded-xl border border-white/5 gap-4">

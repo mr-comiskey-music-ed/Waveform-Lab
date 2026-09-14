@@ -42,32 +42,6 @@ export function buildVerificationCode(
 }
 
 /**
- * Validates a verification code against student inputs.
- */
-export function verifyCodeAuthenticity(
-  code: string,
-  studentName: string,
-  totalScore: number,
-  questA: number,
-  questB: number,
-  questC: number,
-  dateStr: string
-): { isValid: boolean; expectedChecksum: string; parsedChecksum: string } {
-  const parts = code.trim().split('-');
-  if (parts.length !== 4 || parts[0] !== 'WAVE') {
-    return { isValid: false, expectedChecksum: '', parsedChecksum: '' };
-  }
-  const parsedChecksum = parts[3].toUpperCase();
-  const expectedChecksum = generateVerificationHash(studentName, totalScore, questA, questB, questC, dateStr);
-
-  return {
-    isValid: parsedChecksum === expectedChecksum,
-    expectedChecksum,
-    parsedChecksum,
-  };
-}
-
-/**
  * Formats a clean classroom report for Google Classroom / LMS.
  */
 export function formatClassroomReport(score: StudentScore): string {
@@ -88,6 +62,35 @@ FINAL COMPOSITE SCORE:            ${Math.round(score.totalScore)}% / 100%
 VERIFICATION GRADE CODE:          ${score.verificationCode}
 ------------------------------------------------
 Verification Status: VALIDATED TAMPER-EVIDENT HASH
-Teacher Verification Portal: Available in App Teacher Mode
-================================================`;
+===============================================`;
+}
+
+/**
+ * Encodes student score report into a shareable URL link parameter.
+ */
+export function encodeReportToLink(score: StudentScore): string {
+  try {
+    const jsonStr = JSON.stringify(score);
+    const encoded = btoa(encodeURIComponent(jsonStr));
+    const url = `${window.location.origin}${window.location.pathname}?report=${encoded}`;
+    return url;
+  } catch (e) {
+    return window.location.href;
+  }
+}
+
+/**
+ * Decodes student score report from URL query parameter.
+ */
+export function decodeReportFromLink(param: string): StudentScore | null {
+  try {
+    const decodedJson = decodeURIComponent(atob(param));
+    const parsed = JSON.parse(decodedJson);
+    if (parsed && typeof parsed === 'object' && 'verificationCode' in parsed) {
+      return parsed as StudentScore;
+    }
+  } catch (e) {
+    // ignore
+  }
+  return null;
 }

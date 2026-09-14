@@ -8,7 +8,7 @@ export interface Harmonic {
   solo: boolean;
 }
 
-export type AppMode = 'walkthrough' | 'fourier' | 'quests' | 'teacher';
+export type AppMode = 'walkthrough' | 'fourier' | 'quests';
 
 export interface WalkthroughState {
   step: 1 | 2 | 3 | 4;
